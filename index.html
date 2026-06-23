@@ -108,6 +108,9 @@
   <a href="#s4">4 · 神经形态/脉冲</a>
   <a href="#s5">5 · 端侧训练·隐私·泛化</a>
   <a href="#s6">6 · 全图景与愿景</a>
+  <div class="grp">进阶篇 · 研究方向</div>
+  <a href="#adv1">A · 多模态传感器融合</a>
+  <a href="#adv2">B · 弱监督 / 含噪标签</a>
   <div class="grp">参考</div>
   <a href="#glossary">📖 术语表</a>
   <a href="#papers">📄 论文清单</a>
@@ -303,6 +306,105 @@
   <div class="done"><input type="checkbox" id="ck-s6"><label for="ck-s6">我能讲出全图景了 🎉</label></div>
 </section>
 
+<section id="adv1">
+  <h2>进阶篇 A · 多模态传感器融合 <span class="badge">研究方向</span></h2>
+  <p class="lead">从单一信号(ECG/EEG)跨到<b>多传感器融合</b>:ECG、PPG、EMG、IMU、体温、EDA(皮电)、Bio-Z(生物阻抗)、Mic(声学)。这是一整条新轴。</p>
+  <div class="note">⚠️ 本篇与下一篇<b>超出前面 17 篇论文语料</b>,是面向你研究方向的前瞻路线;方法名为可检索关键词,不含具体实验数字。</div>
+
+  <h3>先认清:哪些已学的能迁移,哪些是全新的</h3>
+  <table>
+    <tr><th>已掌握(可复用)</th><th>融合新增(要补)</th></tr>
+    <tr><td>时序编码器 S4D/KAN/CfC/脉冲网络</td><td>多模态<b>对齐与同步</b></td></tr>
+    <tr><td>TinyML / 边缘部署</td><td><b>融合架构</b>(跨模态注意力)</td></tr>
+    <tr><td>μ-Training / 端侧训练</td><td><b>自监督 / 跨模态对比学习</b></td></tr>
+    <tr><td>KAN 抗缺失通道</td><td>缺失<b>模态</b>鲁棒</td></tr>
+  </table>
+  <p>你已学的骨架,在融合里变成"<b>每个模态各自的编码器</b>";新东西在它们<b>之上</b>怎么对齐、融合、在缺标签/缺模态时学。</p>
+
+  <h3>要补的 7 个模块(按依赖排)</h3>
+  <ul>
+    <li><b>A 每模态信号语言</b>:各传感器测什么、采样率、特征、伪迹。注意采样率从 ~1Hz(温度)到 ~16kHz+(麦克风),差 4 个数量级。</li>
+    <li><b>B 时间对齐与同步</b> ⭐最实际:异构采样率重采样/插值、时间对齐、多分辨率分窗。</li>
+    <li><b>C 表征学习 / 自监督</b> ⭐:对比学习(TS2Vec/TS-TCC)、MAE、<b>跨模态对比</b>(CLIP 式 / CMC)、Deep CCA。标签稀缺时这是关键。</li>
+    <li><b>D 融合架构</b> ⭐核心:early/intermediate/late 三种时机;每模态编码器 + 融合模块;<b>跨模态注意力 / 多模态 Transformer</b>(MulT、Perceiver)、门控加权、图神经网络融合。</li>
+    <li><b>E 缺失/异步/噪声模态鲁棒</b>:模态 dropout 训练、生成式补全、信号质量指数(SQI)动态降权。</li>
+    <li><b>F 多任务 + 不确定性</b>:共享编码器多任务头、校准、按可靠性加权。</li>
+    <li><b>G 收回边缘</b>:你已有的 TinyML/μ-Training/脉冲网络全适用;按需唤醒高耗传感器(如 mic)。</li>
+  </ul>
+
+  <h4>视频</h4>
+  <div class="vid">
+    <a class="yt" href="https://www.youtube.com/playlist?list=PL-Fhd_vrvisMYs8A5j7sj8YW1wHhoJSmW" target="_blank" rel="noopener">▶ YouTube · CMU 11-777 多模态机器学习公开课(权威)</a>
+    <a class="yt" href="https://www.youtube.com/watch?v=DPkwjgaRvyI" target="_blank" rel="noopener">▶ YouTube · 该课第 1 讲 Introduction</a>
+    <a class="bili" href="https://search.bilibili.com/all?keyword=多模态学习 融合 入门" target="_blank" rel="noopener">▶ B站 · 搜"多模态学习/融合 入门"</a>
+  </div>
+  <div class="key"><b>边学边练的数据集:</b> WESAD(压力,含 ECG/EDA/EMG/Temp/加速度——几乎就是你的传感器子集)、PPG-DaLiA、PAMAP2 / OPPORTUNITY(活动识别)、Ninapro(EMG+IMU 手势)。</div>
+
+  <details class="quiz"><summary>自测:融合里最先要解决的工程问题是什么?</summary>
+    <div class="ans">时间对齐与同步。因为各传感器采样率差几个数量级(温度 ~1Hz vs 麦克风 ~16kHz+),必须先重采样、对齐到统一时间基、合理分窗,后面的融合才有意义。</div>
+  </details>
+  <div class="done"><input type="checkbox" id="ck-adv1"><label for="ck-adv1">我理解了多模态融合要补什么</label></div>
+</section>
+
+<section id="adv2">
+  <h2>进阶篇 B · 弱监督 / 含噪标签 <span class="badge">研究方向</span></h2>
+  <p class="lead">现实数据的标签常常:① 在<b>时间轴上有偏移</b>(只知"这段里有事件",不知精确时刻);② 有<b>假阳性/假阴性</b>(标签本身错)。这正是<b>弱监督学习</b>的战场。</p>
+
+  <h3>你的两类问题 → 该学什么</h3>
+  <table>
+    <tr><th>痛点</th><th>属于</th><th>主攻方法</th></tr>
+    <tr><td>标签时间偏移</td><td>inexact(粒度粗)</td><td>多示例学习 MIL、弱监督时序定位、CTC、soft-DTW、容差评分</td></tr>
+    <tr><td>假阳/假阴</td><td>inaccurate(标签错)</td><td>噪声标签学习、PU 学习、Confident Learning</td></tr>
+  </table>
+
+  <h3>轨道 1 · 时间偏移 / 粗粒度标签 ⭐</h3>
+  <ul>
+    <li><b>多示例学习(MIL)</b>:把窗口当"包",只要包里有≥1 个事件就标正,<b>不需知道具体哪一帧</b>;用 attention-MIL 顺便定位。</li>
+    <li><b>弱监督时序定位</b>:借鉴声音事件检测(SED)、时序动作定位。</li>
+    <li><b>CTC</b>:标签序列已知、对齐未知时的经典损失。<b>soft-DTW</b>:对时间错位容忍的可微对齐损失。</li>
+    <li>标签平滑 / 时间抖动增强。</li>
+  </ul>
+
+  <h3>轨道 2 · 假阳/假阴(标签噪声)⭐</h3>
+  <ul>
+    <li><b>鲁棒损失</b>:GCE / 对称交叉熵 / MAE,比普通交叉熵抗噪。</li>
+    <li><b>样本筛选</b>:Co-teaching / DivideMix(小损失样本更可能干净)。</li>
+    <li><b>Confident Learning(Cleanlab)</b>:直接定位错标样本,<b>先给数据体检</b>。</li>
+    <li><b>PU 学习</b>:专治假阴——"没标注"常常≠"确实没发生",把未标注当未知而非负。</li>
+  </ul>
+
+  <h3>放大器 + 评估</h3>
+  <p><b>放大器</b>:半监督(FixMatch/伪标签)、<b>自监督预训练兜底</b>(降低对标签质量依赖)、Snorkel(聚合多个弱标注源)、主动学习。</p>
+  <div class="key"><b>易踩的坑——评估也要容错:</b> 标签有时间偏移时<b>别逐帧硬比</b>,要用<b>容差评分 / any-overlap(OVLP)/ event-based F1 + collar</b>,允许预测与标注有小偏移仍算命中;最终评估尽量用<b>干净的小测试集</b>。</div>
+  <p class="pill">顺带:你学过的癫痫检测就是这类问题的天然战场——发作起止时刻标注本就模糊、标注者分歧大,MIL + 容差评分在该领域很常见。</p>
+
+  <h4>视频</h4>
+  <div class="vid">
+    <a class="yt" href="https://www.youtube.com/watch?v=zlyS_oCQyEA" target="_blank" rel="noopener">▶ YouTube · 用生理信号做 MIL 情绪识别(贴合你的传感器)</a>
+    <a class="yt" href="https://www.youtube.com/watch?v=UozNlBZ1PFE" target="_blank" rel="noopener">▶ YouTube · MIL 入门 Workshop</a>
+    <a class="yt" href="https://www.youtube.com/watch?v=YeFC9O99oRk" target="_blank" rel="noopener">▶ YouTube · Deep Learning with Label Noise</a>
+    <a class="yt" href="https://github.com/subeeshvasu/Awesome-Learning-with-Label-Noise" target="_blank" rel="noopener">★ 资源库 · Awesome-Learning-with-Label-Noise</a>
+    <a class="bili" href="https://search.bilibili.com/all?keyword=弱监督学习 多示例 噪声标签" target="_blank" rel="noopener">▶ B站 · 搜"弱监督/多示例/噪声标签"</a>
+  </div>
+
+  <h3>推荐落地顺序</h3>
+  <ol>
+    <li><b>Confident Learning</b> 先给现有标签体检(立竿见影)。</li>
+    <li>自监督 / 跨模态对比<b>预训练</b>兜底。</li>
+    <li>时间对齐 → 融合架构,搭多模态原型(进阶篇 A)。</li>
+    <li>加 <b>MIL + 容差评分</b>治时间偏移;噪声重加鲁棒损失,漏标多加 <b>PU</b>。</li>
+    <li>压回边缘(TinyML / μ-Training)。</li>
+  </ol>
+
+  <details class="quiz"><summary>自测:只知道"这 30 秒里有一次发作",但不知具体在哪一秒,用什么方法?</summary>
+    <div class="ans">多示例学习(MIL):把这 30 秒当成一个"包",标为正(因为含至少一个事件),模型无需逐帧标签即可训练;用 attention-MIL 还能反推事件大概在哪。评估时配合容差评分,容忍小的时间偏移。</div>
+  </details>
+  <details class="quiz"><summary>自测:为什么"没标注"不能直接当成"负样本"?</summary>
+    <div class="ans">因为漏标(假阴性)很常见——没标注往往只是"没人查",不代表"确实没发生"。把它们硬当负样本会教坏模型。PU 学习(正-未标注学习)正是把未标注当"未知"来处理。</div>
+  </details>
+  <div class="done"><input type="checkbox" id="ck-adv2"><label for="ck-adv2">我理解了弱监督/含噪标签怎么应对</label></div>
+</section>
+
 <section id="glossary">
   <h2>📖 术语表</h2>
   <dl class="glossary">
@@ -323,6 +425,15 @@
     <dt>F1 / AUROC</dt><dd>分类评价指标:F1 平衡查准与查全;AUROC 衡量整体区分能力。</dd>
     <dt>STFT</dt><dd>短时傅里叶变换,把信号转成时频谱;耗电,边缘模型倾向避开。</dd>
     <dt>electroceuticals(电子药)</dt><dd>用电刺激替代/辅助药物的治疗设备,本课题组的远期愿景。</dd>
+    <dt>多模态融合</dt><dd>把多种传感器(ECG/PPG/EMG/IMU/Temp/EDA/Bio-Z/Mic)的信息联合学习;分 early/intermediate/late 融合。</dd>
+    <dt>跨模态对比学习</dt><dd>用一个模态去"监督/对齐"另一个模态的自监督方法(CLIP 式 / CMC),标签稀缺时尤其有用。</dd>
+    <dt>弱监督学习</dt><dd>标签不完整/不精确/不准确情况下的学习,分 incomplete / inexact / inaccurate 三类。</dd>
+    <dt>多示例学习 (MIL)</dt><dd>只有"包级"标签(包内有≥1 正例则包为正),不需逐帧标签;治标签时间偏移。</dd>
+    <dt>CTC</dt><dd>标签序列已知、与输入对齐未知时的训练损失(源自语音)。</dd>
+    <dt>噪声标签学习</dt><dd>容忍假阳/假阴的训练:鲁棒损失、Co-teaching、Confident Learning 等。</dd>
+    <dt>PU 学习</dt><dd>正-未标注学习:把"未标注"当未知而非负,治漏标(假阴性)。</dd>
+    <dt>容差评分</dt><dd>评估时允许预测与标注有小时间偏移仍算命中(OVLP / event-based F1 + collar)。</dd>
+    <dt>SQI(信号质量指数)</dt><dd>衡量某路传感器当前是否可信,用于动态降权坏模态。</dd>
   </dl>
 </section>
 
