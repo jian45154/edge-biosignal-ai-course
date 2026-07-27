@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/readme/hero.svg" width="100%" alt="边缘生物信号 AI: 从生理信号到 TinyML 端侧智能的六章学习路径">
+</p>
+
 # 边缘生物信号 AI · 零基础教练课程
 
 一套关于 **TinyML / 生物信号边缘 AI**(悉尼大学 Kavehei 课题组 / Zhaojing Huang 系列论文)的零基础自学课程。

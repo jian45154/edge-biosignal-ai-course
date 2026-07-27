@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="380" viewBox="0 0 1200 380" role="img" aria-labelledby="title desc">
+  <title id="title">边缘生物信号 AI</title>
+  <desc id="desc">从生理信号到 TinyML 端侧智能的六章学习路径</desc>
+  <rect width="1200" height="380" rx="28" fill="#EAF7F4"/>
+  <path d="M64 62h118" stroke="#15937D" stroke-width="7" stroke-linecap="round"/>
+  <text x="64" y="104" fill="#15937D" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif" font-size="18" font-weight="700" letter-spacing="2">零基础自学课程</text>
+  <text x="64" y="181" fill="#11332D" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif" font-size="54" font-weight="760">边缘生物信号 AI</text>
+  <text fill="#11332D" opacity=".82" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif" font-size="24" font-weight="500"><tspan x="64" y="231">从生理信号到 TinyML 端侧智能的六章学习路径</tspan></text>
+  <text x="64" y="304" fill="#11332D" opacity=".58" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="18">静态单页 · 17 篇论文 · 自测题 · 本地进度</text>
+  <path d="M760 104h150q40 0 40 40v154q-38-28-92-28h-98z" fill="#15937D" opacity=".95"/><path d="M1100 104H950v194q38-28 92-28h58z" fill="#F0A34A" opacity=".88"/><path d="M950 144v154" stroke="#11332D" opacity=".35" stroke-width="4"/>
+</svg>
